@@ -6,15 +6,20 @@ using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
-    public Brick BrickPrefab;
-    public int LineCount = 6;
-    public Rigidbody Ball;
+    public Brick BrickPrefab;       // gameObject
+    public int LineCount = 6;       // matrix element count
+    public Rigidbody Ball;          // gameObject
 
-    public Text ScoreText;
-    public GameObject GameOverText;
+    public Text ScoreText;          //UI
+    public Text highScoreText;
+    public string highScorePlayerName;
+    // private Text playerName;
+    private int savedHighScore;
     
-    private bool m_Started = false;
-    private int m_Points;
+    public GameObject GameOverText; //UI
+    
+    private bool m_Started = false; // game status
+    private int _currentScore;           // current player points
     
     private bool m_GameOver = false;
 
@@ -22,6 +27,8 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetHighScore();
+        
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -36,6 +43,13 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        highScoreText.text = $"Best Score: {savedHighScore}: Name: {highScorePlayerName}";
+    }
+
+    private void SetHighScore()
+    {
+        savedHighScore = LoadSaveManager.Instance.savedHighScore;
+        highScorePlayerName = LoadSaveManager.Instance.highScorePlayerName;
     }
 
     private void Update()
@@ -64,13 +78,18 @@ public class MainManager : MonoBehaviour
 
     void AddPoint(int point)
     {
-        m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        _currentScore += point;
+        ScoreText.text = $"Score : {_currentScore}";
     }
 
     public void GameOver()
     {
         m_GameOver = true;
+        if (_currentScore > savedHighScore)
+        {
+            LoadSaveManager.Instance.newHighScore = _currentScore;
+            LoadSaveManager.Instance.SavePlayer();
+        }
         GameOverText.SetActive(true);
     }
 }
