@@ -5,9 +5,16 @@ public class LoadSaveManager : MonoBehaviour
 {
     public static LoadSaveManager Instance;
 
-    public int newHighScore; // new variable declared
+    public int newHighScore;
+    
     public int savedHighScore;
-    public string highScorePlayerName;
+    
+    public string highscorePlayerName;
+
+    public int currentLevel;
+
+    public int currentScore;
+    
     public string currentPlayerName;
     
     [System.Serializable]
@@ -44,8 +51,7 @@ public class LoadSaveManager : MonoBehaviour
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
             savedHighScore = data.score;
-            highScorePlayerName = data.playerName;
-            Debug.Log($"Name: {highScorePlayerName}");
+            highscorePlayerName = data.playerName;
         }
     }
 

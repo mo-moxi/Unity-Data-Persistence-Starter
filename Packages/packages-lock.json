@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.consulo.ide": {
+      "version": "https://github.com/consulo/UnityEditorConsuloPlugin.git#2.6.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "b25393f154e74a09bc78068fb0a7636976f37a49"
+    },
     "com.unity.collab-proxy": {
       "version": "1.13.5",
       "depth": 0,
@@ -18,11 +25,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "2.0.7",
+      "version": "3.0.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.test-framework": "1.1.1"
+        "com.unity.ext.nunit": "1.0.6"
       },
       "url": "https://packages.unity.com"
     },

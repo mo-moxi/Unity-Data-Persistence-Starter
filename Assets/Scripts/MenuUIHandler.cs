@@ -3,6 +3,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 // Sets the script to be executed later than all default scripts
 // This is helpful for UI, since other things may need to be initialized before setting the UI
@@ -10,11 +11,18 @@ using UnityEngine.SceneManagement;
 public class MenuUIHandler : MonoBehaviour
 {
     private string _inputName;
+    public Text highScoreText;
+
+    void Start()
+    {
+        DisplayHighScore();
+    }
 
     public void StartView()
     {
         LoadSaveManager.Instance.currentPlayerName = (string.IsNullOrEmpty(_inputName)) ? "No Name" : _inputName;
-        SceneManager.LoadScene(1); // load main scene
+        LoadSaveManager.Instance.currentLevel = 0;
+        SceneManager.LoadScene(1);
     }
     public void Exit()
     {
@@ -29,6 +37,16 @@ public class MenuUIHandler : MonoBehaviour
     public void ReadStringInput(string s)
     {
         _inputName = s;
-        Debug.Log($"Player name {_inputName}");
+    }
+    
+    private void DisplayHighScore()
+    {
+        var savedHighScore = LoadSaveManager.Instance.savedHighScore;
+        if (savedHighScore < 1)
+        {
+            highScoreText.gameObject.SetActive(false);
+        }
+        var highScorePlayerName = LoadSaveManager.Instance.highscorePlayerName;
+        highScoreText.text = $"Highscore: {savedHighScore} {highScorePlayerName}";
     }
 }
