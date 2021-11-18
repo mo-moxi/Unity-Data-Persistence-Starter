@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,11 +7,12 @@ public class Paddle : MonoBehaviour
 {
     public float Speed = 2.0f;
     public float MaxMovement = 2.0f;
-    
+    public AudioSource _audioSource;
+    public AudioClip hitEffect;
     // Start is called before the first frame update
     void Start()
     {
-        
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -27,5 +29,10 @@ public class Paddle : MonoBehaviour
             pos.x = -MaxMovement;
 
         transform.position = pos;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        _audioSource.PlayOneShot(hitEffect);
     }
 }

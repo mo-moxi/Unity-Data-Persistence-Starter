@@ -4,24 +4,30 @@ using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
-    public Brick BrickPrefab;       // gameObject
-    public int LineCount = 6;       // matrix element count
-    public Rigidbody Ball;          // gameObject
-    public Text ScoreText;          //UI
-    public Text CurrentLevelText;
-    private string highScorePlayerName;
-    private int savedHighScore;
-    private int brickCount;
-    public GameObject GameOverText; //UI
-    public GameObject LevelText; //UI
-    private bool m_Started;
+    public Brick brickPrefab; 
+    public int lineCount = 6;
+    public Rigidbody ball;
+    public Text scoreText; 
+    public Text currentLevelText;
+    private string _highScorePlayerName;
+    private int _savedHighScore;
+    private int _brickCount;
+    public GameObject gameOverText;
+    public GameObject levelText;
+    private bool _started;
     private int _currentScore;
     private int _currentLevel = 1;
     private string _currentPlayer;
-    private bool m_GameOver;
+    private bool _gameOver;
     [SerializeField] private float yPos = 2.75f;
+    public AudioSource audioSource;
+    public AudioClip vanishSfx;
+    public AudioClip gameOver;
+    public AudioClip levelUp;
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
         if ( LoadSaveManager.Instance.currentLevel > 1)
         {
             _currentScore = LoadSaveManager.Instance.currentScore; 
@@ -35,51 +41,49 @@ public class MainManager : MonoBehaviour
 
     void UpdateHighScore()
     {
-        if (_currentScore > savedHighScore)
+        if (_currentScore > _savedHighScore)
         {
             LoadSaveManager.Instance.newHighScore = _currentScore;
             LoadSaveManager.Instance.SavePlayer();
         }
     }
-
     float SetYPos()
     {
         yPos = ((yPos -= 0.125f * _currentLevel) >= 1.75f) ? yPos : 1.75f;
         return yPos;
     }
-
     void DrawBricks()
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         int[] pointCountArray = new [] {1,1,2,2,5,5};
-        for (int i = 0; i < LineCount; ++i)
+        for (int i = 0; i < lineCount; ++i)
         {
             for (int x = 0; x < perLine; ++x)
             {
                 Vector3 position = new Vector3(-1.5f + step * x, yPos + i * 0.3f, 0);
-                var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
+                var brick = Instantiate(brickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
-                brickCount++;
+                _brickCount++;
             }
         }
     }
     private void Update()
     {
-        if (!m_Started)
+        if (!_started)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                m_Started = true;
+                _started = true;
                 float randomDirection = Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
                 forceDir.Normalize();
-                Ball.transform.SetParent(null);
-                Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
+                ball.transform.SetParent(null);
+                ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
-        else if (m_GameOver)
+        else if (_gameOver)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -87,7 +91,6 @@ public class MainManager : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             UpdateHighScore();
@@ -97,30 +100,35 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         _currentScore += point;
-        brickCount--;
+        _brickCount--;
+        audioSource.PlayOneShot(vanishSfx);
         UpdateScoreText();
         UpdateHighScore();
-        if (brickCount > 0) return;
+        if (_brickCount > 0) return;
         LevelComplete();
     }
     void LevelComplete()
     {
-        Ball.gameObject.SetActive(false);
+        ball.gameObject.SetActive(false);
         _currentLevel++;
         UpdateHighScore();
+        audioSource.PlayOneShot(levelUp);
         LoadSaveManager.Instance.currentScore = _currentScore;
         LoadSaveManager.Instance.currentLevel = _currentLevel;
-        LevelText.SetActive(true);
+        levelText.SetActive(true);
     }
     public void GameOver()
     {
-        m_GameOver = true;
+        _gameOver = true;
         UpdateHighScore();
-        GameOverText.SetActive(true);
+        audioSource.Stop();
+        audioSource.PlayOneShot(gameOver);
+        gameOverText.SetActive(true);
+        
     }
     void UpdateScoreText()
     {
-        CurrentLevelText.text = $"Level {_currentLevel}";
-        ScoreText.text = $"{_currentPlayer} : {_currentScore}";
+        currentLevelText.text = $"Level {_currentLevel}";
+        scoreText.text = $"{_currentPlayer} : {_currentScore}";
     }
 }
