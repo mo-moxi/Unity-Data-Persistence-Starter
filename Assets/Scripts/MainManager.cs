@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -38,7 +39,6 @@ public class MainManager : MonoBehaviour
         UpdateScoreText();
         DrawBricks();
     }
-
     void UpdateHighScore()
     {
         if (_currentScore > _savedHighScore)
@@ -94,7 +94,7 @@ public class MainManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             UpdateHighScore();
-            SceneManager.LoadScene(0);
+            StartCoroutine(QuitLevel());
         }
     }
     void AddPoint(int point)
@@ -124,11 +124,15 @@ public class MainManager : MonoBehaviour
         audioSource.Stop();
         audioSource.PlayOneShot(gameOver);
         gameOverText.SetActive(true);
-        
     }
     void UpdateScoreText()
     {
         currentLevelText.text = $"Level {_currentLevel}";
         scoreText.text = $"{_currentPlayer} : {_currentScore}";
+    }
+    IEnumerator QuitLevel()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene(0);
     }
 }

@@ -47,6 +47,7 @@
      <Compile Include="Assets\Scripts\Ball.cs" />
      <Compile Include="Assets\Scripts\MenuUIHandler.cs" />
      <Compile Include="Assets\Scripts\DeathZone.cs" />
+     <Compile Include="Assets\Scripts\RotateSoundPivot.cs" />
      <Compile Include="Assets\Scripts\Brick.cs" />
      <Compile Include="Assets\Scripts\LoadSaveManager.cs" />
      <Reference Include="UnityEngine">

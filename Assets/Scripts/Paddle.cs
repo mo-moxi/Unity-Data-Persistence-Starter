@@ -1,38 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class Paddle : MonoBehaviour
 {
-    public float Speed = 2.0f;
-    public float MaxMovement = 2.0f;
-    public AudioSource _audioSource;
+    public float speed = 2.0f;
+    public float maxMovement = 2.0f;
+    private AudioSource _audioSource;
     public AudioClip hitEffect;
-    // Start is called before the first frame update
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
     }
-
-    // Update is called once per frame
     void Update()
     {
         float input = Input.GetAxis("Horizontal");
-
         Vector3 pos = transform.position;
-        pos.x += input * Speed * Time.deltaTime;
+        pos.x += input * speed * Time.deltaTime;
 
-        if (pos.x > MaxMovement)
-            pos.x = MaxMovement;
-        else if (pos.x < -MaxMovement)
-            pos.x = -MaxMovement;
-
+        if (pos.x > maxMovement)
+            pos.x = maxMovement;
+        else if (pos.x < -maxMovement)
+            pos.x = -maxMovement;
         transform.position = pos;
     }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        _audioSource.PlayOneShot(hitEffect);
-    }
+    private void OnCollisionEnter(Collision other) => _audioSource.PlayOneShot(hitEffect);
 }
