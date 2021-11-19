@@ -4,26 +4,18 @@ using UnityEngine;
 public class LoadSaveManager : MonoBehaviour
 {
     public static LoadSaveManager Instance;
-
     public int newHighScore;
-    
     public int savedHighScore;
-    
     public string highscorePlayerName;
-
     public int currentLevel;
-
     public int currentScore;
-    
     public string currentPlayerName;
-    
     [System.Serializable]
     class SaveData
     {
         public int score;
         public string playerName;
     }
-
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.R))
@@ -33,7 +25,6 @@ public class LoadSaveManager : MonoBehaviour
             SavePlayer();
         }
     }
-
     public void SavePlayer()
     {
         SaveData data = new SaveData();
