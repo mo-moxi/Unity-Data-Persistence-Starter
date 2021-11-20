@@ -12,9 +12,12 @@ public class MenuUIHandler : MonoBehaviour
 {
     private string _inputName;
     public Text highScoreText;
-
+    private InputField _inputField;  
     void Start()
     {
+        _inputField = GetComponentInChildren<InputField>();
+        _inputField.ActivateInputField();
+        
         DisplayHighScore();
     }
 

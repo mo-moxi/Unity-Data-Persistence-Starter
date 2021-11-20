@@ -16,15 +16,6 @@ public class LoadSaveManager : MonoBehaviour
         public int score;
         public string playerName;
     }
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            newHighScore = 0;
-            currentPlayerName = "";
-            SavePlayer();
-        }
-    }
     public void SavePlayer()
     {
         SaveData data = new SaveData();
