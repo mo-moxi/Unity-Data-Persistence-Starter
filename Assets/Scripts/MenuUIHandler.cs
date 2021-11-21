@@ -16,6 +16,7 @@ public class MenuUIHandler : MonoBehaviour
     void Start()
     {
         _inputField = GetComponentInChildren<InputField>();
+        _inputField.Select();
         _inputField.ActivateInputField();
         
         DisplayHighScore();
